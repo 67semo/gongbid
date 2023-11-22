@@ -26,6 +26,11 @@ def select_samaple(qurl):
     #df.to_csv('abc.csv', index=False)  #첫수집
     return df
 
+def get_detail(qurl):
+    resp = requests.get(qurl)
+    data = resp.json()['response']['body']['items'][0]
+    return data
+
 # g2b의 디테일페이지에서 참가가능 지역과 면허내용을 조회
 def crawl_dtl_page(url):
     resp = requests.get(url)

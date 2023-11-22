@@ -40,4 +40,4 @@ def result_base(sample_df):
     for item in sample_df.itertuples():
         qur = bid_rlt_bs(item.bidNtceNo)
         bid_rlt_serz = read_bid_result_bs(qur)
-        print(bid_rlt_serz)
+        #print(bid_rlt_serz)

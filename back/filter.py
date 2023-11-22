@@ -2,7 +2,6 @@
 import re
 
 def filtering_bid(df, region, indust):
-    print(region, indust)
     # 취소상태에 있는 bid 와 관련 공고 제거
     msk = list(df[df.ntceKindNm=="취소"].bidNtceNo)
 
@@ -22,7 +21,6 @@ def filtering_bid(df, region, indust):
 
     ftd1['rgn_mk'] = rgn_mk
     ftd2 = ftd1[ftd1['rgn_mk'] == 1]
-    print('취소와 지역 정리 남은 것',ftd2)
 
     # 면허제한 필터링
     msk = []
@@ -30,7 +28,7 @@ def filtering_bid(df, region, indust):
     for a in ftd2.permit_indu:
         a1 = a[0]
         b = re.sub(r'[\[\]\'(\(0-9{4}\)]', '', a1)
-        print(b, len(a))
+        #print(b, len(a))
         if indust == '실내건축':
             if indust in b and len(a) == 1:
                 msk.append(1)

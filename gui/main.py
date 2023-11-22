@@ -56,10 +56,11 @@ class WindowClass(QMainWindow, form_class):
             'presmptPrceEnd': self.presmptPrceEnd.text().replace(',', ''),
         }
         valA = self.valuA_chk.isChecked()
-        print('A value :', valA)
 
-        dfs = conductor.bidsData(rqDic, valA)
+        conductor.bidsData(rqDic, valA)
+
         '''  개발중 잠
+        dfs = conductor.bidsData(rqDic, valA)
         self.df = dfs[0]
         model = PandasModel(self.df)
         self.table_view.setModel(model)
