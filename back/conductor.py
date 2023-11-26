@@ -49,26 +49,23 @@ def serchRBid(reqDic, vala):
 
     df = pd.DataFrame(base_amount)
     width = df.query('rsrvtnPrceRngBgnRate == "-3" and rsrvtnPrceRngEndRate == "+3"')
-    width.to_csv('aa.csv')
-    df.to_csv('ab.csv')
 
+
+
+    # 항목정리
+    orgn = config.read_defintn('공사기초금액')
+    except_a = config.read_defintn('A값', '세부')
+    print(orgn, except_a)
     if vala:
-        df1 = df[df['bidPrceCalclAYn'] == 'Y'][config.read_defintn('공사기초금액')]
+        df1 = width[width['bidPrceCalclAYn'] == 'Y'][orgn]
+        df1['sumA'] = df1[except_a].astype(int).sum()
     else:
-        df1 = df[df['bidPrceCalclAYn'] == 'N'][config.read_defintn('공사기초금액')]
-        #return df
-        print(df1)
+        df1 = width[width['bidPrceCalclAYn'] == 'N'][[x for x in orgn if x not in except_a]]
 
 
-    valA_lst = config.read_defintn('A값', '세부')
-    print(valA_lst)
-
-    #df1['sumA'] = df1[df1['qltyMngcstAObjYn'] == 'Y'][valA_lst].astype(int).sum(axis=1)
-    #df1['sumA'] = df1[df1['qltyMngcstAObjYn'] == 'N'][valA_lst[:-1]].astype(int).sum(axis=1)
-    #df1['sumA'] = df1[valA_lst].astype(int).sum(axis=1)
-
-    #return df
+    #return df1
     print(df1)
+    df1.to_csv('ab.csv')
 
 
 
