@@ -58,6 +58,7 @@ def serchRBid(reqDic, vala):
     print(orgn, except_a)
     if vala:
         df1 = width[width['bidPrceCalclAYn'] == 'Y'][orgn]
+
         df1['sumA'] = df1[except_a].astype(int).sum()
     else:
         df1 = width[width['bidPrceCalclAYn'] == 'N'][[x for x in orgn if x not in except_a]]
