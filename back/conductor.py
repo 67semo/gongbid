@@ -2,10 +2,10 @@
 import pandas as pd
 
 from back import collector, filter
-from . import config, bid_result
+from . import config, parameter, bid_result
 
 def mk_qrUrl(dataDic, serv):    # 나라장터 검색(맨처음자료)
-    url = "https://apis.data.go.kr/1230000/BidPublicInfoService04/" + config.desc[serv][0] + '?'
+    url = "https://apis.data.go.kr/1230000/BidPublicInfoService04/" + parameter.desc[serv][0] + '?'
     for k, v in dataDic.items():
         url = url + k + '=' + str(v) + '&'
     return url[:-1]
@@ -75,8 +75,8 @@ def serchRBid(reqDic, vala):
     width = df.query('rsrvtnPrceRngBgnRate == "-3" and rsrvtnPrceRngEndRate == "+3"')
 
     # A값에 대한 정리
-    orgn = config.read_defintn('공사기초금액')
-    except_a = config.read_defintn('A값', '세부')
+    orgn = parameter.read_defintn('공사기초금액')
+    except_a = parameter.read_defintn('A값', '세부')
 
 
     if vala:
