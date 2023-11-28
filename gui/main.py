@@ -50,8 +50,8 @@ class WindowClass(QMainWindow, form_class):
         rqDic = {
             'inqryBgnDt': bgnDt,
             'inqryEndDt': endDt,
-            'prtcptLmtRgnNm': self.region.text(),
-            'indstrytyNm': self.indus_cb.currentText(),
+            'prtcptLmtRgnNm': self.region.text(),                           # 참가 가능 지역
+            'indstrytyNm': self.indus_cb.currentText(),                     # 참가 가능 면허
             'presmptPrceBgn': self.presmptPrceBgn.text().replace(',', ''),
             'presmptPrceEnd': self.presmptPrceEnd.text().replace(',', ''),
         }

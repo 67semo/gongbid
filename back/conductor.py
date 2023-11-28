@@ -24,6 +24,31 @@ def mk_dic_bAmt(no):        # 공사기초금액조회 url생성
     url = mk_qrUrl(bsDic, 'gongAmtCon')
     return url
 
+def mk_dic_region(no, ord):        # 공사기초금액조회 url생성
+    bsDic = {
+        'serviceKey': config.encoding,
+        'numOfRows': 10,
+        'inqryDiv': 2,
+        'bidNtceNo': no,
+        'bidNtceOrd': ord,
+        'type': 'json'
+    }
+    url = mk_qrUrl(bsDic, 'region')
+    return url
+
+def mk_dic_licen(no, ord):        # 며허조회 url생성
+    bsDic = {
+        'serviceKey': config.encoding,
+        'numOfRows': 10,
+        'inqryDiv': 2,
+        'bidNtceNo': no,
+        'bidNtceOrd': ord,
+        'type': 'json'
+    }
+    url = mk_qrUrl(bsDic, 'license')
+    return url
+
+
 def serchRBid(reqDic, vala):
     bsDic = {
         'serviceKey': config.encoding,
@@ -43,31 +68,45 @@ def serchRBid(reqDic, vala):
     # 기초금액, valuA, 순공사원가
     base_amount = []
     for item in ruf_bid_df.itertuples():
-        #print(item.bidNtceNo, item.bidNtceOrd)
         aa = mk_dic_bAmt(item.bidNtceNo)                # 기초금액조회 url생성
-        base_amount.append(collector.get_detail(aa))    # 기초금액, 예가변동폭, 순공사원가, A값등의 정보를 가져공
+        base_amount.append(collector.get_detail(aa)[0])    # 기초금액, 예가변동폭, 순공사원가, A값등의 정보를 가져공
 
     df = pd.DataFrame(base_amount)
     width = df.query('rsrvtnPrceRngBgnRate == "-3" and rsrvtnPrceRngEndRate == "+3"')
 
-
-
-    # 항목정리
+    # A값에 대한 정리
     orgn = config.read_defintn('공사기초금액')
     except_a = config.read_defintn('A값', '세부')
-    print(orgn, except_a)
+
+
     if vala:
         df1 = width[width['bidPrceCalclAYn'] == 'Y'][orgn]
-
-        df1['sumA'] = df1[except_a].astype(int).sum()
+        df1['sumA'] = df1[except_a].astype(int).sum(axis=1)
     else:
-        df1 = width[width['bidPrceCalclAYn'] == 'N'][[x for x in orgn if x not in except_a]]
+        df1 = width[width['bidPrceCalclAYn'] == 'N'][orgn]
 
+    except_a = except_a + ['bidPrceCalclAYn', 'qltyMngcstAObjYn', 'envCnsrvcst', 'scontrctPayprcePayGrntyFee']  # 필요없는 항목들의 리스트
+    df1.drop(except_a, axis=1, inplace=True)
+    #df1.to_csv('ab.csv')
 
-    #return df1
-    print(df1)
-    df1.to_csv('ab.csv')
+    # 지역 및 면허
+    prmit_rgn = []
+    prmit_lsn = []
+    for item in df1.itertuples():
+        rgn_url = mk_dic_region(item.bidNtceNo, item.bidNtceOrd)                # 참가지역조회 url생성
+        lsn_url = mk_dic_licen(item.bidNtceNo, item.bidNtceOrd)
+        prmit_rgn = prmit_rgn + collector.get_detail(rgn_url)
+        prmit_lsn = prmit_lsn + collector.get_detail(lsn_url)
 
+    #print(prmit_lsn)
+    df2 = pd.DataFrame(prmit_rgn)
+    #df2.drop(df2[('인천' not in df2['prtcptPsblRgnNm'])].index, axis=0, inplace=True)
+    df2 = df2[df2['prtcptPsblRgnNm'].str.contains(reqDic['prtcptLmtRgnNm'])]
+    rgn_lst = set(list(df2['bidNtceNo']))
+    #print(rgn_lst)
+    df2.to_csv('ac.csv')
+    df3 = pd.DataFrame(prmit_lsn)
+    df3.to_csv('ad.csv')
 
 
 def bidsData(require_dic, valA):
