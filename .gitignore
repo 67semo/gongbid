@@ -4,4 +4,4 @@ util
 .idea
 config*.*
 *.pyc
-*.csv
+a*.csv
