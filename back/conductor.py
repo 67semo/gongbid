@@ -78,7 +78,6 @@ def serchRBid(reqDic, vala):
     orgn = parameter.read_defintn('공사기초금액')
     except_a = parameter.read_defintn('A값', '세부')
 
-
     if vala:
         df1 = width[width['bidPrceCalclAYn'] == 'Y'][orgn]
         df1['sumA'] = df1[except_a].astype(int).sum(axis=1)
@@ -87,7 +86,7 @@ def serchRBid(reqDic, vala):
 
     except_a = except_a + ['bidPrceCalclAYn', 'qltyMngcstAObjYn', 'envCnsrvcst', 'scontrctPayprcePayGrntyFee']  # 필요없는 항목들의 리스트
     df1.drop(except_a, axis=1, inplace=True)
-    #df1.to_csv('ab.csv')
+    df1.to_csv('ab.csv')
 
     # 지역 및 면허
     prmit_rgn = []

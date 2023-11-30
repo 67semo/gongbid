@@ -29,18 +29,36 @@
          <rect>
           <x>150</x>
           <y>100</y>
-          <width>131</width>
+          <width>211</width>
           <height>22</height>
          </rect>
         </property>
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
         <item>
          <property name="text">
-          <string>실내건축</string>
+          <string>금속창호ㆍ지붕건축물조립공사업</string>
          </property>
         </item>
         <item>
          <property name="text">
           <string>기계설비</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>시설물유지관리업</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>실내건축공사업</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>철근ㆍ콘크리트공사업</string>
          </property>
         </item>
        </widget>
@@ -186,8 +204,8 @@
        <widget class="QPushButton" name="pushButton">
         <property name="geometry">
          <rect>
-          <x>490</x>
-          <y>390</y>
+          <x>650</x>
+          <y>500</y>
           <width>75</width>
           <height>23</height>
          </rect>
@@ -199,10 +217,10 @@
        <widget class="QGroupBox" name="groupBox">
         <property name="geometry">
          <rect>
-          <x>420</x>
-          <y>60</y>
+          <x>60</x>
+          <y>330</y>
           <width>141</width>
-          <height>201</height>
+          <height>141</height>
          </rect>
         </property>
         <property name="title">
@@ -221,7 +239,7 @@
           <string>A 값</string>
          </property>
          <property name="checked">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
         </widget>
         <widget class="QCheckBox" name="checkBox_2">
@@ -267,7 +285,7 @@
      <x>0</x>
      <y>0</y>
      <width>941</width>
-     <height>23</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
