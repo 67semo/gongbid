@@ -50,6 +50,7 @@ def mk_dic_licen(no, ord):        # 며허조회 url생성
 
 
 def serchRBid(reqDic, vala):
+    # require_dic 작성
     bsDic = {
         'serviceKey': config.encoding,
         'numOfRows': 100,
@@ -59,18 +60,23 @@ def serchRBid(reqDic, vala):
         'type': 'json'
     }
     bsDic.update(reqDic)
+    # require_dic 을 기초로 url을 만들고 나라장터조회로 가져온 데이터중 변경 또는 취소된 비드를 제거한다.
     reqUrl = mk_qrUrl(bsDic, 'naraCon')
     #print(reqUrl)
     ruf_bid_df = collector.select_samaple(reqUrl)
     ruf_bid_df = ruf_bid_df.drop_duplicates(['bidNtceNo'], keep='last')     # last 동일한 공고번호중 마지막 ver만 남기고 버린다.
     ruf_bid_df = ruf_bid_df[ruf_bid_df['ntceKindNm'] != "취소"]
 
-    # 기초금액, valuA, 순공사원가
+    # 기초금액, valuA, 순공사원가 등 필요한 자료들 가져고고 데이터 프레임을 정리한다.
     base_amount = []
     for item in ruf_bid_df.itertuples():
+        #print(item.bidNtceNo)
         aa = mk_dic_bAmt(item.bidNtceNo)                # 기초금액조회 url생성
-        base_amount.append(collector.get_detail(aa)[0])    # 기초금액, 예가변동폭, 순공사원가, A값등의 정보를 가져공
+        rt_data = collector.get_detail(aa)[0]
+        if rt_data != "zero_items":
+            base_amount.append(rt_data)    # 기초금액, 예가변동폭, 순공사원가, A값등의 정보를 가져공
 
+    print('abc', base_amount)
     df = pd.DataFrame(base_amount)
     width = df.query('rsrvtnPrceRngBgnRate == "-3" and rsrvtnPrceRngEndRate == "+3"')
 
@@ -86,7 +92,7 @@ def serchRBid(reqDic, vala):
 
     except_a = except_a + ['bidPrceCalclAYn', 'qltyMngcstAObjYn', 'envCnsrvcst', 'scontrctPayprcePayGrntyFee']  # 필요없는 항목들의 리스트
     df1.drop(except_a, axis=1, inplace=True)
-    df1.to_csv('ab.csv')
+    df1.to_csv('ab.csv')           # 1차 필터링을 한 데이터프레임을 확인하기위한 화일
 
     # 지역 및 면허
     prmit_rgn = []
@@ -109,6 +115,10 @@ def serchRBid(reqDic, vala):
 
 
 def bidsData(require_dic, valA):
+    #print(require_dic)
+    reg = [require_dic['prtcptLmtRgnNm']]
+    ind = [require_dic['indstrytyNm']]
+    print(reg, ind)
     chkA_df = serchRBid(require_dic, valA)    # 초기정보 형성과 A값 검토
     #for item in chkA_df.itertuples:
 

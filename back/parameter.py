@@ -17,8 +17,8 @@ desc = {
 }
 
 def read_defintn(desc, ds='구분'):
-    file = "D:\\Python3\\gongbid\\back\\gonggo.csv"
-    #file = '/home/kohenil/project/python/bid2/back/gonggo.csv'
+    #file = "D:\\Python3\\gongbid\\back\\gonggo.csv"
+    file = '/home/kohenil/project/python/bid2/back/gonggo.csv'
     df = pd.read_csv(file)
     return list(df[df[ds] == desc]['코드'])
 

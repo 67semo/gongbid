@@ -28,6 +28,9 @@ def select_samaple(qurl):
 
 def get_detail(qurl):
     resp = requests.get(qurl)
+    chk_bit = resp.json()['response']['body']['totalCount']
+    if chk_bit == 0:
+        return ["zero_items"]
     data = resp.json()['response']['body']['items']
     return data
 
