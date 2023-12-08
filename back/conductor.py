@@ -3,6 +3,7 @@ import pandas as pd
 
 from back import collector, filter
 from . import config, parameter, bid_result
+from . import filter_region_Indust as flt
 
 def mk_qrUrl(dataDic, serv):    # 나라장터 검색(맨처음자료)
     url = "https://apis.data.go.kr/1230000/BidPublicInfoService04/" + parameter.desc[serv][0] + '?'
@@ -103,15 +104,16 @@ def serchRBid(reqDic, vala):
         prmit_rgn = prmit_rgn + collector.get_detail(rgn_url)
         prmit_lsn = prmit_lsn + collector.get_detail(lsn_url)
 
-    #print(prmit_lsn)
+    print(prmit_lsn)
     df2 = pd.DataFrame(prmit_rgn)
-    #df2.drop(df2[('인천' not in df2['prtcptPsblRgnNm'])].index, axis=0, inplace=True)
     df2 = df2[df2['prtcptPsblRgnNm'].str.contains(reqDic['prtcptLmtRgnNm'])]
-    rgn_lst = set(list(df2['bidNtceNo']))
-    #print(rgn_lst)
+    df2 = flt.region(df2, reqDic['prtcptLmtRgnNm'])
     df2.to_csv('ac.csv')
+
     df3 = pd.DataFrame(prmit_lsn)
-    df3.to_csv('ad.csv')
+    df3 = flt.license(df3, [reqDic['indstrytyNm']])
+    df3.to_csv('ad1.csv')
+
 
 
 def bidsData(require_dic, valA):

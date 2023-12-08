@@ -4,7 +4,7 @@ import re
 def license(df, license):
     df['lcnsLmtNm'] = df['lcnsLmtNm'].apply(lambda x: re.sub(r'/|\b\d{4}\b', '', x))        # 면허리스트 에서 코드부분(/9999형식)을 삭제
     group_ex = df.groupby(['bidNtceNo', 'lmtGrpNo'])['lcnsLmtNm'].apply(list).reset_index(name='tlist')
-    print('license', group_ex)
+
     gr = group_ex[group_ex['tlist'].apply(lambda x: x == license)]
     return gr
 
@@ -26,3 +26,8 @@ def str_count(str, st_lst):
     if count == len(st_lst):
         return True
     else: return False
+
+if __name__ == '__main__':
+    df = pd.read_csv('../gui/ad.csv')
+    a = license(df, ['전문소방시설공사업'])
+    print(a)
