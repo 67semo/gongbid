@@ -1,7 +1,7 @@
 from urllib.parse import urlencode
 import pandas as pd
 import requests
-from . import config
+from back import config
 
 def bid_rlt_bs(bidNo):
     # 입찰결과 개요 조회  base url
@@ -16,7 +16,7 @@ def bid_rlt_bs(bidNo):
         "bidNtceNo" : bidNo
     }
 
-    qs = url + urlencode(params)
+    qs = url + urlencode(params, safe='%')
 
     return qs
 
@@ -41,3 +41,7 @@ def result_base(sample_df):
         qur = bid_rlt_bs(item.bidNtceNo)
         bid_rlt_serz = read_bid_result_bs(qur)
         #print(bid_rlt_serz)
+
+if __name__ == '__main__':
+    df = pd.read_csv('../gui/abc.csv', index_col=None)
+    print(df)

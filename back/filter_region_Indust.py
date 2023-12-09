@@ -29,5 +29,5 @@ def str_count(str, st_lst):
 
 if __name__ == '__main__':
     df = pd.read_csv('../gui/ad.csv')
-    a = license(df, ['전문소방시설공사업'])
+    a = license(df, ['실내건축공사업'])
     print(a)

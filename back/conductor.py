@@ -77,7 +77,7 @@ def serchRBid(reqDic, vala):
         if rt_data != "zero_items":
             base_amount.append(rt_data)    # 기초금액, 예가변동폭, 순공사원가, A값등의 정보를 가져공
 
-    print('abc', base_amount)
+    #print('abc', base_amount)
     df = pd.DataFrame(base_amount)
     width = df.query('rsrvtnPrceRngBgnRate == "-3" and rsrvtnPrceRngEndRate == "+3"')
 
@@ -104,7 +104,6 @@ def serchRBid(reqDic, vala):
         prmit_rgn = prmit_rgn + collector.get_detail(rgn_url)
         prmit_lsn = prmit_lsn + collector.get_detail(lsn_url)
 
-    print(prmit_lsn)
     df2 = pd.DataFrame(prmit_rgn)
     df2 = df2[df2['prtcptPsblRgnNm'].str.contains(reqDic['prtcptLmtRgnNm'])]
     df2 = flt.region(df2, reqDic['prtcptLmtRgnNm'])
@@ -114,15 +113,26 @@ def serchRBid(reqDic, vala):
     df3 = flt.license(df3, [reqDic['indstrytyNm']])
     df3.to_csv('ad1.csv')
 
+    result_sr = pd.merge(df2['bidNtceNo'], df3['bidNtceNo'])
+    df1.reset_index()
+    rslt_df = df1[df1['bidNtceNo'].isin(result_sr['bidNtceNo'])]
+    return rslt_df
+
 
 
 def bidsData(require_dic, valA):
+    import time
+    st_time = time.time()
     #print(require_dic)
     reg = [require_dic['prtcptLmtRgnNm']]
     ind = [require_dic['indstrytyNm']]
-    print(reg, ind)
+    #print(reg, ind)
+
     chkA_df = serchRBid(require_dic, valA)    # 초기정보 형성과 A값 검토
-    #for item in chkA_df.itertuples:
+    tm1 = time.time()
+    print(f"{tm1 - st_time: .5f} sec")
+    chkA_df.to_csv('abc.csv', index=False)
+    print(chkA_df)
 
 
 
