@@ -68,13 +68,15 @@ def result_base(sample_df):
     ech_lst=[]
     for item in sample_df.itertuples():
         qur = bid_rlt_bs(item.bidNtceNo)
+        #print(qur)
         bid_rlt_serz = read_bid_result_bs(qur)
         rt_lst.append(bid_rlt_serz)
         qur1 = bid_rlt_ech(item.bidNtceNo)
+        #print(qur1)
         thru_df = read_bid_result_ech(qur1)
         thru_df['ejacul_rate']= (thru_df['bidprcAmt'].astype(int) - item.sumA * (1 - rate)) / (item.bssamt * rate)
         ech_lst.append(thru_df)
-        print(thru_df)
+        #print(thru_df)
 
     rt_df = pd.DataFrame(rt_lst)
     rt_echdf = pd.concat(ech_lst)
@@ -89,7 +91,10 @@ if __name__ == '__main__':
     df = pd.read_csv('../gui/abc.csv')
     df1 , ech_df = result_base(df)
     df = pd.concat([df, df1], axis=1)
-    df.to_csv('abd.csv', )
+    df.drop(columns=['bidNtceNo'], inplace=True)
+    df.to_csv('abd.csv')
+    ech_df.to_csv('abc.csv')
+    print(df.dtypes)
 
 
     '''
