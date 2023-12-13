@@ -67,7 +67,7 @@ if __name__ == '__main__':
     df = pd.read_csv('abc.csv')
     sizs = pivo(df)
     sizs.to_csv('abf.csv')
-    print(sizs)
+    print(sizs.describe())
     point_lst = []
     for sr in sizs.itertuples():
         a = divsCnt(sr)
@@ -84,16 +84,21 @@ if __name__ == '__main__':
         a = 0
         if e!=0:
             a = diffu(e, d)
-            th_li[d][d-4:d+5] = a
+            if d < 4:
+                th_li[d][:d+5] = a[4-d:]
+            elif d > 145:
+                th_li[d][d-4:] = a[:200-d]
+            else:
+                th_li[d][d-4:d+5] = a
 
     th_df = pd.DataFrame(th_li)
+    th_df.to_csv('aca.csv')
 
     dh_Sr = th_df.sum(axis=0)
-    # 보정계수 맨나중의 값(8)은 임의 의 조정겂으로 앞으로도 많은 연구가 필요함
-    corrt =  sum(dh_Sr) / 3.4 / sizs.shape[1]/8
-    #print(corrt)
+    # 보정계수 맨나중의 값(1)은 임의 의 조정겂으로 앞으로도 많은 연구가 필요함
+    corrt =  sum(dh_Sr) / 3.4 / sizs.count().mean()
+    #print(sizs.count().mean())
     corrected_sum = [x + corrt for x in dh_Sr]
-
     nor_df = pd.read_csv('aaa.csv')
     nor_sr = divsCnt(nor_df['saYld'])
     nor_sr1 = [x * sum(corrected_sum)/sum(nor_sr) for x in nor_sr]
