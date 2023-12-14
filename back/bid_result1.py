@@ -71,19 +71,29 @@ def result_base(sample_df):
         #print(qur)
         bid_rlt_serz = read_bid_result_bs(qur)
         rt_lst.append(bid_rlt_serz)
+
         qur1 = bid_rlt_ech(item.bidNtceNo)
         #print(qur1)
         thru_df = read_bid_result_ech(qur1)
-        print(thru_df)
+        #print(thru_df)
         thru_df['bidprcAmt'] = pd.to_numeric(thru_df['bidprcAmt'], errors='coerce')
         thru_df = thru_df.dropna()
-        thru_df['ejacul_rate']= (thru_df['bidprcAmt'].astype(int) - item.sumA * (1 - rate)) / (item.bssamt * rate)
+        thru_df['ejacul_rate']= (thru_df['bidprcAmt'].astype(int) - item.sumA * (1 - rate)) / (int(item.bssamt) * rate)
         ech_lst.append(thru_df)
-        #print(thru_df)
 
     rt_df = pd.DataFrame(rt_lst)
     rt_echdf = pd.concat(ech_lst)
     return rt_df, rt_echdf
+
+def result_manager(ruf_df):
+    df1, ech_df = result_base(ruf_df)
+    #df = pd.merge([ruf_df, df1], on='bidNtceNo')
+    df = pd.merge(left=ruf_df, right=df1, on='bidNtceNo')
+    #df.drop(columns=['bidNtceNo'], inplace=True)
+    print(df)
+    return df, ech_df
+    df.to_csv('abd.csv')
+    ech_df.to_csv('abc.csv')
 
 
 if __name__ == '__main__':

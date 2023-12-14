@@ -4,6 +4,7 @@ import pandas as pd
 from back import collector, filter
 from . import config, parameter, bid_result
 from . import filter_region_Indust as flt
+from . import bid_result1 as br
 
 def mk_qrUrl(dataDic, serv):    # 나라장터 검색(맨처음자료)
     url = "https://apis.data.go.kr/1230000/BidPublicInfoService04/" + parameter.desc[serv][0] + '?'
@@ -71,13 +72,11 @@ def serchRBid(reqDic, vala):
     # 기초금액, valuA, 순공사원가 등 필요한 자료들 가져고고 데이터 프레임을 정리한다.
     base_amount = []
     for item in ruf_bid_df.itertuples():
-        #print(item.bidNtceNo)
         aa = mk_dic_bAmt(item.bidNtceNo)                # 기초금액조회 url생성
         rt_data = collector.get_detail(aa)[0]
         if rt_data != "zero_items":
             base_amount.append(rt_data)    # 기초금액, 예가변동폭, 순공사원가, A값등의 정보를 가져공
 
-    #print('abc', base_amount)
     df = pd.DataFrame(base_amount)
     width = df.query('rsrvtnPrceRngBgnRate == "-3" and rsrvtnPrceRngEndRate == "+3"')
 
@@ -93,7 +92,7 @@ def serchRBid(reqDic, vala):
 
     except_a = except_a + ['bidPrceCalclAYn', 'qltyMngcstAObjYn', 'envCnsrvcst', 'scontrctPayprcePayGrntyFee']  # 필요없는 항목들의 리스트
     df1.drop(except_a, axis=1, inplace=True)
-    df1.to_csv('ab.csv')           # 1차 필터링을 한 데이터프레임을 확인하기위한 화일
+    #df1.to_csv('ab.csv')           # 1차 필터링을 한 데이터프레임을 확인하기위한 화일
 
     # 지역 및 면허
     prmit_rgn = []
@@ -118,8 +117,6 @@ def serchRBid(reqDic, vala):
     rslt_df = df1[df1['bidNtceNo'].isin(result_sr['bidNtceNo'])]
     return rslt_df
 
-
-
 def bidsData(require_dic, valA):
     import time
     st_time = time.time()
@@ -132,7 +129,11 @@ def bidsData(require_dic, valA):
     tm1 = time.time()
     print(f"{tm1 - st_time: .5f} sec")
     chkA_df.to_csv('abc.csv', index=False)
-    print(chkA_df)
+    #print(chkA_df)
+    resp_df, resp_ech_df = br.result_manager(chkA_df)
+    resp_ech_df.to_csv('acb.csv')
+    return resp_df
+
 
 
 

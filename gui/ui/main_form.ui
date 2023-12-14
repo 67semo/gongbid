@@ -277,7 +277,7 @@
       </widget>
       <widget class="QWidget" name="tab_2">
        <attribute name="title">
-        <string>Tab 2</string>
+        <string>검색자료</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_2">
         <item row="0" column="0">
@@ -287,7 +287,7 @@
       </widget>
       <widget class="QWidget" name="tab">
        <attribute name="title">
-        <string>쪽</string>
+        <string>확률그래프</string>
        </attribute>
       </widget>
      </widget>

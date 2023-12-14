@@ -4,6 +4,8 @@ from PyQt5.QtGui import QIntValidator
 from PyQt5.QtCore import QDate, QAbstractTableModel, Qt
 from PyQt5 import uic
 from back import conductor
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
 form_class = uic.loadUiType("./ui/main_form.ui")[0]
 
@@ -57,7 +59,10 @@ class WindowClass(QMainWindow, form_class):
         }
         valA = self.valuA_chk.isChecked()
 
-        conductor.bidsData(rqDic, valA)
+        dfs = conductor.bidsData(rqDic, valA)
+        self.df = dfs
+        model = PandasModel(self.df)
+        self.table_view.setModel(model)
 
         '''  개발중 잠
         dfs = conductor.bidsData(rqDic, valA)

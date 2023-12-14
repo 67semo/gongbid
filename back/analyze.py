@@ -64,7 +64,7 @@ def diffu(v, p):
 
 
 if __name__ == '__main__':
-    df = pd.read_csv('abc.csv')
+    df = pd.read_csv('../gui/acb.csv')
     sizs = pivo(df)
     sizs.to_csv('abf.csv')
     print(sizs.describe())
