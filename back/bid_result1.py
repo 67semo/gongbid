@@ -3,6 +3,8 @@ import pandas as pd
 import requests
 from back import config
 
+global indiv_vot
+
 def bid_rlt_ech(bidNo):
     # 개별투찰포인트조회
     url = "https://apis.data.go.kr/1230000/ScsbidInfoService/getOpengResultListInfoOpengCompt?"
@@ -57,12 +59,13 @@ def read_bid_result_bs(qurl):
 
     msk_lst = ['bidNtceNo', 'plnprc']         # ['bssamt','PrearngPrcePurcnstcst'] 기초금액수집에서 수집
     sr = pd.Series(nd_dic[0]).loc[msk_lst]
-    sr['participants_num'] = partici
+    sr['participants_num'] = str(int(partici))
 
     #sr_exp  = { 'bidNtceNo': '공고번호', 'plnprc': '예정가격', 'bssamt': '기초금액', 'PrearngPrcePurcnstcst': '예정가격순공사비', 'participants_num': '참가업체수'}
     return sr
 
 def result_base(sample_df):
+    global indiv_vot
     rate = 0.87745
     rt_lst = []
     ech_lst=[]
@@ -82,19 +85,16 @@ def result_base(sample_df):
         ech_lst.append(thru_df)
 
     rt_df = pd.DataFrame(rt_lst)
-    rt_echdf = pd.concat(ech_lst)
-    return rt_df, rt_echdf
+    indiv_vot = pd.concat(ech_lst)
+    indiv_vot.to_csv('acb.csv')
+    return rt_df
 
 def result_manager(ruf_df):
-    df1, ech_df = result_base(ruf_df)
+    df1 = result_base(ruf_df)
     #df = pd.merge([ruf_df, df1], on='bidNtceNo')
     df = pd.merge(left=ruf_df, right=df1, on='bidNtceNo')
-    #df.drop(columns=['bidNtceNo'], inplace=True)
-    print(df)
-    return df, ech_df
-    df.to_csv('abd.csv')
-    ech_df.to_csv('abc.csv')
-
+    #print(df)
+    return df
 
 if __name__ == '__main__':
     pd.set_option('display.max_columns', 15)

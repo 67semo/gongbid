@@ -29,7 +29,7 @@ def showgrahp(df):
     ax.plot(range(200), df['yield'], label='thru point')
     ax.grid(True)
     ax.legend()
-    plt.xticks(range(0, 201, 5))
+    plt.xticks(range(0, 200, 5))
     plt.show()
 
 def diffu(v, p):

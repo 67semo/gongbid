@@ -4,8 +4,8 @@ from PyQt5.QtGui import QIntValidator
 from PyQt5.QtCore import QDate, QAbstractTableModel, Qt
 from PyQt5 import uic
 from back import conductor
-import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from back import bid_result1, analyze
 
 form_class = uic.loadUiType("./ui/main_form.ui")[0]
 

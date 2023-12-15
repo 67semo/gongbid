@@ -130,9 +130,19 @@ def bidsData(require_dic, valA):
     print(f"{tm1 - st_time: .5f} sec")
     chkA_df.to_csv('abc.csv', index=False)
     #print(chkA_df)
-    resp_df, resp_ech_df = br.result_manager(chkA_df)
-    resp_ech_df.to_csv('acb.csv')
+    resp_df = br.result_manager(chkA_df)
     return resp_df
+
+'''    thound_div_col = ['bssamt', 'bssAmtPurcnstcst', 'sumA', 'plnprc']
+    for col in thound_div_col:
+        print(col)
+        resp_df[col] = resp_df[col].apply(add_commas)'''
+
+
+
+
+def add_commas(num):
+    return f'{num:,}'
 
 
 
