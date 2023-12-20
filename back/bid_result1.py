@@ -50,14 +50,21 @@ def read_bid_result_ech(qurl):
 
 def read_bid_result_bs(qurl):
     resp = requests.get(qurl)
+    msk_lst = ['bidNtceNo', 'plnprc']  # ['bssamt','PrearngPrcePurcnstcst'] 기초금액수집에서 수집
     body = resp.json()['response']['body']
+    if body['totalCount'] == 0:
+        errdic = {
+            'bidNtceNo': 999,
+            'plnprc': 0,
+            'participants_num': 0
+        }
+        return pd.Series(errdic)
     nd_dic = body['items']
     #print(list(nd_dic.keys()))
     df = pd.DataFrame(nd_dic)
     # 참가자 수를 확인하기위해 추첨횟수의 합계에서 2로 나누웠다.(1개사에 2개씩이므로..)
     partici = pd.to_numeric(df['drwtNum'], errors='coerce').sum() / 2
 
-    msk_lst = ['bidNtceNo', 'plnprc']         # ['bssamt','PrearngPrcePurcnstcst'] 기초금액수집에서 수집
     sr = pd.Series(nd_dic[0]).loc[msk_lst]
     sr['participants_num'] = str(int(partici))
 
@@ -71,8 +78,10 @@ def result_base(sample_df):
     ech_lst=[]
     for item in sample_df.itertuples():
         qur = bid_rlt_bs(item.bidNtceNo)
-        #print(qur)
+        print(qur)
         bid_rlt_serz = read_bid_result_bs(qur)
+        if bid_rlt_serz['bidNtceNo'] == 999:
+            continue
         rt_lst.append(bid_rlt_serz)
 
         qur1 = bid_rlt_ech(item.bidNtceNo)

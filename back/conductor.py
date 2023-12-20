@@ -64,7 +64,7 @@ def serchRBid(reqDic, vala):
     bsDic.update(reqDic)
     # require_dic 을 기초로 url을 만들고 나라장터조회로 가져온 데이터중 변경 또는 취소된 비드를 제거한다.
     reqUrl = mk_qrUrl(bsDic, 'naraCon')
-    #print(reqUrl)
+    print(reqUrl)
     ruf_bid_df = collector.select_samaple(reqUrl)
     ruf_bid_df = ruf_bid_df.drop_duplicates(['bidNtceNo'], keep='last')     # last 동일한 공고번호중 마지막 ver만 남기고 버린다.
     ruf_bid_df = ruf_bid_df[ruf_bid_df['ntceKindNm'] != "취소"]

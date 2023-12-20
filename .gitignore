@@ -5,3 +5,4 @@ util
 config*.*
 *.pyc
 a*.csv
+parameter.py
