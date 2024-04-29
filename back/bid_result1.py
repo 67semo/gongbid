@@ -82,6 +82,7 @@ def result_base(sample_df):
         bid_rlt_serz = read_bid_result_bs(qur)
         if bid_rlt_serz['bidNtceNo'] == 999:
             continue
+        print(bid_rlt_serz)
         rt_lst.append(bid_rlt_serz)
 
         qur1 = bid_rlt_ech(item.bidNtceNo)

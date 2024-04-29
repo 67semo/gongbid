@@ -1,6 +1,7 @@
 ﻿코드,항목,구분,세부
 bidNtceNo,공고번호,공사기초금액,ned
 bidNtceOrd,공고차수,공사기초금액,ned
+opengDt,개찰일시,공사기초금액,ned
 bssamt,기초금액,공사기초금액,ned
 rsrvtnPrceRngBgnRate,예비가격범위시작률,공사기초금액,
 rsrvtnPrceRngEndRate,예비가격범위종료율,공사기초금액,

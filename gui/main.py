@@ -54,8 +54,8 @@ class WindowClass(QMainWindow, form_class):
             'inqryEndDt': endDt,
             'prtcptLmtRgnNm': self.region.text(),                           # 참가 가능 지역
             'indstrytyNm': self.indus_cb.currentText(),                     # 참가 가능 면허
-            'presmptPrceBgn': self.presmptPrceBgn.text().replace(',', ''),
-            'presmptPrceEnd': self.presmptPrceEnd.text().replace(',', ''),
+            'presmptPrceBgn': self.presmptPrceBgn.text().replace(',', ''),  # 추정가격 하한가
+            'presmptPrceEnd': self.presmptPrceEnd.text().replace(',', ''),  # 추정가격 상한가
         }
         valA = self.valuA_chk.isChecked()
 

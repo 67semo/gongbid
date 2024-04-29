@@ -32,6 +32,7 @@ def get_detail(qurl):
     if chk_bit == 0:
         return ["zero_items"]
     data = resp.json()['response']['body']['items']
+
     return data
 
 # g2b의 디테일페이지에서 참가가능 지역과 면허내용을 조회
