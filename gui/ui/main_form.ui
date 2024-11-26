@@ -97,7 +97,7 @@
          </rect>
         </property>
         <property name="text">
-         <string>400,000,000</string>
+         <string>194,000,000</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -129,7 +129,7 @@
          </rect>
         </property>
         <property name="text">
-         <string>300,000,000</string>
+         <string>129,000,000</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

@@ -43,5 +43,9 @@ def result_base(sample_df):
         #print(bid_rlt_serz)
 
 if __name__ == '__main__':
+    '''
     df = pd.read_csv('../gui/abc.csv', index_col=None)
     print(df)
+    '''
+    a = bid_rlt_bs(20230826044)
+    print(a)

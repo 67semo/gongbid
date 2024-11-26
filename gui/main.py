@@ -5,7 +5,7 @@ from PyQt5.QtCore import QDate, QAbstractTableModel, Qt
 from PyQt5 import uic
 from back import conductor
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from back import bid_result1, analyze
+from back import bid_result1, analyze2
 
 form_class = uic.loadUiType("./ui/main_form.ui")[0]
 
@@ -58,7 +58,10 @@ class WindowClass(QMainWindow, form_class):
             'presmptPrceEnd': self.presmptPrceEnd.text().replace(',', ''),  # 추정가격 상한가
         }
         valA = self.valuA_chk.isChecked()
+        sun_wanga = self.checkBox_2.isChecked() # 순공사원가
 
+        # 외부함수 호출
+        print(rqDic, valA)
         dfs = conductor.bidsData(rqDic, valA)
         self.df = dfs
         model = PandasModel(self.df)

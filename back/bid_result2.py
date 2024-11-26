@@ -1,14 +1,14 @@
+# 상품해석을 위한 것으로 추정
 from urllib.parse import urlencode
 import pandas as pd
 import requests
 from back import config
-from time import sleep
 
 global indiv_vot
 
 def bid_rlt_ech(bidNo):
     # 개별투찰포인트조회
-    url = "http://apis.data.go.kr/1230000/ScsbidInfoService01/getOpengResultListInfoOpengCompt01?"
+    url = "https://apis.data.go.kr/1230000/ScsbidInfoService/getOpengResultListInfoOpengCompt?"
     params = {
         "numOfRows" : 900,
         "pageNo" : 1,
@@ -18,7 +18,7 @@ def bid_rlt_ech(bidNo):
     }
     qs = url + urlencode(params)
     qs = qs.replace('%25', '%')
-
+    print(qs)
     return qs
 
 def bid_rlt_bs(bidNo):
@@ -26,7 +26,7 @@ def bid_rlt_bs(bidNo):
     '''
     복수예가, 에가별 추첨수, 예정가격
     '''
-    url = "http://apis.data.go.kr/1230000/ScsbidInfoService01/getOpengResultListInfoCnstwkPreparPcDetail01?"
+    url = "https://apis.data.go.kr/1230000/ScsbidInfoService/getOpengResultListInfoThngPreparPcDetail?"
 
     params = {
         "numOfRows" : 15,
@@ -42,17 +42,7 @@ def bid_rlt_bs(bidNo):
     return qs
 
 def read_bid_result_ech(qurl):
-    for _ in range(3):
-        try:
-            resp = requests.get(qurl, timeout=10)
-            if resp.status_code == 200:
-                break
-        except requests.exceptions.RequestException as e:
-            print("An error occurred:", e)
-        sleep(2)
-    else:
-        print("Failed after 3 attempts.")
-
+    resp = requests.get(qurl)
     body = resp.json()['response']['body']
     nd_dic = body['items']
     #print(list(nd_dic.keys()))
@@ -60,17 +50,7 @@ def read_bid_result_ech(qurl):
     return df
 
 def read_bid_result_bs(qurl):
-    for _ in range(3):
-        try:
-            resp = requests.get(qurl, timeout=10)
-            if resp.status_code == 200:
-                break
-        except requests.exceptions.RequestException as e:
-            print("An error occurred:", e)
-        sleep(2)
-    else:
-        print("Failed after 3 attempts.")
-
+    resp = requests.get(qurl)
     msk_lst = ['bidNtceNo', 'plnprc']  # ['bssamt','PrearngPrcePurcnstcst'] 기초금액수집에서 수집
     body = resp.json()['response']['body']
     if body['totalCount'] == 0:
@@ -81,7 +61,6 @@ def read_bid_result_bs(qurl):
         }
         return pd.Series(errdic)
     nd_dic = body['items']
-    #print(nd_dic)
     #print(list(nd_dic.keys()))
     df = pd.DataFrame(nd_dic)
     # 참가자 수를 확인하기위해 추첨횟수의 합계에서 2로 나누웠다.(1개사에 2개씩이므로..)
@@ -95,7 +74,7 @@ def read_bid_result_bs(qurl):
 
 def result_base(sample_df):
     global indiv_vot
-    rate = 0.87745
+    rate = 0.84245
     rt_lst = []
     ech_lst=[]
     for item in sample_df.itertuples():
@@ -122,26 +101,22 @@ def result_base(sample_df):
     return rt_df
 
 def result_manager(ruf_df):
-    df1 = result_base(ruf_df)
+    df = result_base(ruf_df)
     #df = pd.merge([ruf_df, df1], on='bidNtceNo')
-    df = pd.merge(left=ruf_df, right=df1, on='bidNtceNo')
-    #print(df)
+    #df = pd.merge(left=ruf_df, right=df1, on='bidNtceNo')
+    print(df)
     return df
 
 if __name__ == '__main__':
-    pd.set_option('display.max_columns', 15)
-    pd.set_option('display.max_colwidth', 30)
-    pd.set_option('display.unicode.east_asian_width', True)
-
-    df = pd.read_csv('../gui/abc.csv')
-    print(df)
-    df1 , ech_df = result_base(df)
-    df = pd.concat([df, df1], axis=1)
-    df.drop(columns=['bidNtceNo'], inplace=True)
-    df.to_csv('abd.csv')
-    ech_df.to_csv('abc.csv')
-    print(df.dtypes)
-
+    #a = bid_rlt_ech(20230826044)
+    dt = {
+        'bidNtceNo':[20230826044, 20231206720],
+        'bssamt': [113542000, 209638000],
+        'sumA': [0, 0]
+    }
+    df01 = pd.DataFrame.from_dict(dt)
+    print(df01)
+    result_manager(df01).to_csv('result2.csv')
 
     '''
     df = pd.read_csv('../gui/abc.csv')
