@@ -18,34 +18,41 @@ def selec_str(str):
 
 
 def select_samaple(qurl):
-    resp = requests.get(qurl, timeout=50)
+    for _ in range(5):
+        try:
+            resp = requests.get(qurl, timeout=20)
+            if resp.status_code == 200:
+                break
+        except requests.exceptions.RequestException as e:
+            print("An error occurred:", e, f"\n url = {qurl}")
+        sleep(2)
+    else:
+        print("Failed after 5 attempts.")
 
     body = resp.json()['response']['body']
     print(body['numOfRows'], body['pageNo'], body['totalCount'])
     circle = math.ceil(body['totalCount'] / body['numOfRows'])
     #print(circle)
     nd_dic_lst = body['items']
-    nd_col = ['bidNtceNo', 'bidNtceOrd', 'ntceKindNm', 'bidNtceNm', 'bidNtceDtlUrl', 'opengDt']
+    nd_col = ['bidNtceNo', 'bidNtceOrd', 'ntceKindNm', 'bidNtceNm', 'bidNtceDtlUrl', 'opengDt']     # needed column.
     df = pd.DataFrame(nd_dic_lst).loc[:, nd_col]
-    df.to_csv('abc.csv', index=False)  #첫수집
+    df.to_csv('firstSelec.csv', index=False)  #첫수집
     return df
 
 def get_detail(qurl):
-    print(qurl)
     for _ in range(5):
         try:
             resp = requests.get(qurl, timeout=10)
             if resp.status_code == 200:
                 break
         except requests.exceptions.RequestException as e:
-            print("An error occurred:", e)
+            print("An error occurred:", e, f"\n url = {qurl}")
         sleep(2)
     else:
-        print("Failed after 3 attempts.")
+        print("Failed after 5 attempts.")
     chk_bit = resp.json()['response']['body']['totalCount']
     print(chk_bit)
     if chk_bit == 0:
-        print('zero')
         return ["zero_items"]
     data = resp.json()['response']['body']['items']
 

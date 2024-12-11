@@ -58,12 +58,12 @@
         </item>
         <item>
          <property name="text">
-          <string>일반소방시설공사업기계</string>
+          <string>일반소방시설공사업(기계)</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>일반소방시설공사업전기</string>
+          <string>일반소방시설공사업(전기)</string>
          </property>
         </item>
         <item>
@@ -280,9 +280,19 @@
           <string>순공사원가적용</string>
          </property>
          <property name="checkable">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
         </widget>
+       </widget>
+       <widget class="QListWidget" name="licen_lst">
+        <property name="geometry">
+         <rect>
+          <x>420</x>
+          <y>90</y>
+          <width>256</width>
+          <height>192</height>
+         </rect>
+        </property>
        </widget>
       </widget>
       <widget class="QWidget" name="tab_2">

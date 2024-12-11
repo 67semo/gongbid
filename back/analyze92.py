@@ -1,9 +1,10 @@
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
 def pivo(lts_df):
-    istb_df = lts_df.pivot(index='prcbdrBizno', columns='bidNtceNo', values='ejacul_rate')
-    #istb_df.to_csv('distb_df.csv')
+    istb_df = lts_df.pivot(index='prcbdrBizno', columns='bidNtceNo', values='ejacul_rate') # 업체별 사정율 입찰별로 정리
+    istb_df.to_csv('distb_df.csv')
     #print(istb_df)
     return istb_df
 
@@ -17,7 +18,10 @@ def divsCnt(sr):
         div.append(mi + offs * i)
     #print(len(div), div, div[200])
     rDistrib = pd.cut(sr, bins=div).value_counts().sort_index()
-    #print(rDistrib, sr)
+    #rDistrib.name = sr.index
+
+    #print(type(str(sr.index)), str(sr.index))
+
     return rDistrib
 
 def showgrahp(df):
@@ -29,7 +33,8 @@ def showgrahp(df):
     ax.plot(range(200), df['yield'], label='thru point')
     ax.grid(True)
     ax.legend()
-    plt.xticks(range(0, 200, 5))
+    #plt.xticks(range(0, 200, 5))
+    plt.xticks(ticks=range(0, len(df.index), 10), labels=df.index[::10], rotation=45)
     plt.show()
 
 def diffu(v, p):
@@ -66,7 +71,6 @@ def collection(df):
     # 보정작업
     th_li = [[0 for _ in range(200)] for _ in range(200)]
     # print(f"빈바닥 : {th_li}")
-
     for d, e in enumerate(df):
         a = 0
         if e != 0:
@@ -86,19 +90,46 @@ def collection(df):
 
 if __name__ == '__main__':
     df = pd.read_csv('../gui/acb.csv')
-    sizs = pivo(df)
+    #df = pd.read_csv('acb.csv')
+    sizs = pivo(df)   # 업체별(행), 입찰별(열) 사정율정리
+
+    lim_up = 1.025
+    lim_dn = 0.975
+    n = len(sizs.columns)
+
+    sizs.iloc[:, :] = sizs.iloc[:, :].where(sizs.iloc[:, :].applymap(lambda x: lim_dn <= x <= lim_up), np.nan)  # 사정율 유효범위외 nan처리
     sizs.to_csv('abf.csv')
     print(sizs.describe())
+
+    bid_bizNo = list(sizs.index)    # 업체별 사업자등록번호 리스트화
+
+    summ_df = pd.DataFrame({
+        'stdDev': sizs.std(axis=1, ddof=0),     # 표준편차
+        'mean': sizs.mean(axis=1),
+        'count': sizs.mean(axis=1),
+    })
+
+    summ_df['weight'] = 0.05 / (0.05 + 2 * summ_df['stdDev']) * summ_df['count'] / n    # 업체별 가중치 정리
+
+    summ_df.to_csv('summerize.csv')
+
     point_lst = []
     for sr in sizs.itertuples():
+        #print(sr)
         a = divsCnt(sr)
+        #print(a)
         point_lst.append(a)
 
     po_df = pd.concat(point_lst, axis=1)
-    po_df.to_csv('abe.csv')
-    sum_df = po_df.sum(axis=1)
-    #print(sum_df)
-    #showgrahp(sum_df)
+    po_df.columns = bid_bizNo
+    #po_df.replace(0, np.nan, inplace=True)
+    #print(po_df.describe())
+    po_df.to_csv('count.csv')
+    weighted_point = po_df * summ_df['weight']
+
+    weighted_point.to_csv('abe.csv')
+    sum_df = weighted_point.sum(axis=1)
+    sum_df.to_csv('check.csv')
 
     dh_Sr = collection(sum_df)
 
@@ -117,7 +148,9 @@ if __name__ == '__main__':
     ans_df['yield'] = ans_df['normal']/ans_df['thrd_pt']
     mn = ans_df['normal'].max() / ans_df['yield'].max()
     ans_df['yield'] = ans_df['yield'] * mn
-    ans_df.to_csv('aab.csv')
+
+    ans_df.index = po_df.index
+    ans_df.to_csv('yield.csv')
     showgrahp(ans_df)
 
 
